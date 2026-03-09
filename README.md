@@ -1,0 +1,1 @@
+Esta é uma de minhas primeiras Web API's, criei este repositório para fazer o versionamento desta aplicação, e mais para frente, quando ela estiver bem estruturada, servir de portfólio. Ainda sou um jovem, que esta entrando no mundo da programação e ainda tem muito a aprender.
