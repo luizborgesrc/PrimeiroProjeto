@@ -6,6 +6,7 @@ using WebAplicationPessoa.WebAPI.Data;
 using WebAplicationPessoa.WebAPI.DTOs;
 using WebAplicationPessoa.WebAPI.Model;
 using WebAplicationPessoa.WebAPI.Repository;
+using WebAplicationPessoa.WebAPI.Services;
 
 namespace WebAplicationPessoa.WebAPI.Controller;
 
@@ -13,19 +14,15 @@ namespace WebAplicationPessoa.WebAPI.Controller;
 [Route("api/[controller]")]
 public class PessoaController : ControllerBase
 {
-    private readonly IMapper _mapper;
-    private readonly IPessoaRepository _repository;
-    
-    public PessoaController(IPessoaRepository repository, IMapper mapper)
+    private readonly IPessoaService _pessoaService;
+    public PessoaController(IPessoaService pessoaService)
     {
-        _repository = repository;
-        _mapper = mapper;
+        _pessoaService = pessoaService;
     }
-
     [HttpGet]
     public async Task<ActionResult<IEnumerable<PessoaDto>>> MostrarPessoas ()
     {
-        var pessoas = await _repository.ListarPessoas();
+        var pessoas = await _pessoaService.MostrarPessoas();
         
         return Ok(pessoas);
     }
@@ -33,44 +30,30 @@ public class PessoaController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<PessoaDto>> MostrarPessoaPorId (int id)
     {
-        var pessoaPorId = await _repository.ObterPessoaPorId(id);
+        var pessoa = await _pessoaService.MostrarPessoaPorId(id);
         
-        return Ok(pessoaPorId);
+        return Ok(pessoa);
     }
 
     [HttpPost]
     public async Task<ActionResult<PessoaDto>> CriarPessoa (PessoaCreateDto dadosNovaPessoa, [FromServices] IValidator<PessoaCreateDto> validator)
     {
-        var validationResult = await validator.ValidateAsync(dadosNovaPessoa);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-        var criarPessoa = _mapper.Map<PessoaModel>(dadosNovaPessoa);
-        
-        await _repository.InserirPessoa(criarPessoa);
-        
-        var pessoaCriadaDto = _mapper.Map<PessoaDto>(criarPessoa);
-        
-        return CreatedAtAction(nameof(MostrarPessoaPorId), new { id = pessoaCriadaDto.Id }, pessoaCriadaDto);
+        var pessoa = await _pessoaService.CriarPessoa(dadosNovaPessoa, validator);
+        return Ok(pessoa);
     }
 
     [HttpPut("{id}")]
     public async Task<ActionResult<PessoaDto>> AtualizarPessoa([FromRoute] int id, [FromBody] PessoaDto dadosPessoaNova)
     {
-        var pessoaNoBanco =  await _repository.ObterPessoaPorId(id);
-
-        _mapper.Map(dadosPessoaNova, pessoaNoBanco );
-        await _repository.AtualizarPessoa(pessoaNoBanco, id);
+        var pessoaNova = await _pessoaService.AtualizarPessoa(id, dadosPessoaNova);
         
-        return NoContent();
+        return Ok(pessoaNova);
     }
 
     [HttpDelete("{id}")]
     public async Task<ActionResult<PessoaDto>> ExcluirPessoa(int id)
     {
-        await _repository.ExcluirPessoa(id);
-
+        var pessoaExcluida = await _pessoaService.DeletarPessoa(id);
         return NoContent();
     }
 }
