@@ -14,7 +14,7 @@ public interface IPessoaService
     public Task<PessoaDto> CriarPessoa(PessoaCreateDto pessoaCreateDto, [FromServices] IValidator<PessoaCreateDto> validator);
 
 
-    public Task<PessoaDto> AtualizarPessoa(int id, PessoaDto novaPessoaDto);
+    public Task<PessoaDto> AtualizarPessoa(int id, PessoaCreateDto novaPessoaDto);
 
 
     public Task<PessoaDto> DeletarPessoa(int id);

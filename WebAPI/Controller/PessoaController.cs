@@ -43,8 +43,9 @@ public class PessoaController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<PessoaDto>> AtualizarPessoa([FromRoute] int id, [FromBody] PessoaDto dadosPessoaNova)
+    public async Task<ActionResult<PessoaDto>> AtualizarPessoa([FromRoute] int id, [FromBody] PessoaCreateDto dadosPessoaNova)
     {
+        
         var pessoaNova = await _pessoaService.AtualizarPessoa(id, dadosPessoaNova);
         
         return Ok(pessoaNova);

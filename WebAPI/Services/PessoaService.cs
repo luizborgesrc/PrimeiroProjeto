@@ -44,7 +44,7 @@ public class PessoaService : IPessoaService
         return _mapper.Map<PessoaDto>(novaPessoa);
     }
 
-    public async Task<PessoaDto> AtualizarPessoa(int id, PessoaDto novaPessoaDto)
+    public async Task<PessoaDto> AtualizarPessoa(int id, PessoaCreateDto novaPessoaDto)
     {
         var pessoaNoBanco = await _pessoaRepository.ObterPessoaPorId(id);
 
