@@ -53,7 +53,7 @@ public class PessoaController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult<PessoaDto>> ExcluirPessoa(int id)
     {
-        var pessoaExcluida = await _pessoaService.DeletarPessoa(id);
+        await _pessoaService.DeletarPessoa(id);
         return NoContent();
     }
 }
